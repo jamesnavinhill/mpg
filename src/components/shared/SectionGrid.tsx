@@ -1,6 +1,7 @@
 import React from "react";
 import { SectionDef, Field } from "../../lib/types";
 import ChipsInput from "./ChipsInput";
+import ComboSelect from "./ComboSelect";
 
 type Values = Record<string, any>;
 
@@ -13,6 +14,18 @@ export default function SectionGrid({
   values: Values;
   onChange: (next: Values) => void;
 }) {
+  const [openIds, setOpenIds] = React.useState<Set<string>>(
+    () => new Set(sections.map((s) => s.id))
+  );
+  const toggle = (id: string) => {
+    setOpenIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
   const setField = (id: string, val: any) => {
     const next = { ...values } as any;
     setByPath(next, id, val);
@@ -21,26 +34,55 @@ export default function SectionGrid({
 
   return (
     <div className="space-y-3">
-      {sections.map((sec) => (
-        <div
-          key={sec.id}
-          className="bg-neutral-950 rounded-lg border border-neutral-800 overflow-hidden"
-        >
-          <div className="px-3 py-2 bg-neutral-950/50 border-b border-neutral-800 text-sm font-medium">
-            {sec.label}
+      {sections.map((sec) => {
+        const open = openIds.has(sec.id);
+        return (
+          <div
+            key={sec.id}
+            className="bg-neutral-950 rounded-lg border border-neutral-800 overflow-hidden"
+          >
+            <button
+              type="button"
+              onClick={() => toggle(sec.id)}
+              className="w-full px-3 py-2 bg-neutral-950/50 border-b border-neutral-800 text-sm font-medium flex items-center justify-between hover:bg-neutral-950/60"
+            >
+              <span>{sec.label}</span>
+              <svg
+                className={`h-4 w-4 text-neutral-400 transition-transform ${
+                  open ? "rotate-180" : "rotate-0"
+                }`}
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden
+              >
+                <path
+                  d="M6 9l6 6 6-6"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+            <div
+              className={
+                open
+                  ? "p-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
+                  : "hidden"
+              }
+            >
+              {sec.fields.map((f) => (
+                <FieldEditor
+                  key={f.id}
+                  field={f}
+                  value={getByPath(values, f.id)}
+                  onChange={(v) => setField(f.id, v)}
+                />
+              ))}
+            </div>
           </div>
-          <div className="p-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {sec.fields.map((f) => (
-              <FieldEditor
-                key={f.id}
-                field={f}
-                value={getByPath(values, f.id)}
-                onChange={(v) => setField(f.id, v)}
-              />
-            ))}
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
@@ -66,12 +108,11 @@ function FieldEditor({
     return (
       <div>
         {label}
-        <input
-          id={field.id}
+        <ComboSelect
           value={value || ""}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={onChange}
           placeholder={field.placeholder}
-          className="w-full rounded-md bg-neutral-950 border border-neutral-800 px-2 py-1.5 text-xs text-neutral-200"
+          suggestions={field.options || []}
         />
       </div>
     );
@@ -92,19 +133,12 @@ function FieldEditor({
     return (
       <div>
         {label}
-        <select
-          id={field.id}
+        <ComboSelect
           value={value || ""}
-          onChange={(e) => onChange(e.target.value)}
-          className="w-full rounded-md bg-neutral-950 border border-neutral-800 px-2 py-1.5 text-xs text-neutral-200"
-        >
-          <option value="">Select…</option>
-          {(field.options || []).map((opt) => (
-            <option key={opt} value={opt}>
-              {opt}
-            </option>
-          ))}
-        </select>
+          onChange={onChange}
+          placeholder={field.placeholder || "Select or type…"}
+          suggestions={field.options || []}
+        />
       </div>
     );
   }

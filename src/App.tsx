@@ -407,19 +407,6 @@ export function App() {
           </div>
         </div>
 
-        <PromptOutput
-          selections={selections}
-          onApplyEdited={() => {}}
-          defaultOpen={true}
-          generating={false}
-          externalText={currentPrompt || undefined}
-          onSavePreset={(text) => {
-            if (!text) return;
-            add({ text, selections: selections as any });
-          }}
-          onClearAll={() => setSelections({})}
-        />
-
         <ManualPanel
           selectedGenres={selectedList}
           selections={selections}
@@ -431,6 +418,19 @@ export function App() {
           bodyId="manual-panel-body"
           onClearSelections={() => setSelections({})}
           onAutoFill={generateFromGenres}
+        />
+
+        <PromptOutput
+          selections={selections}
+          onApplyEdited={() => {}}
+          defaultOpen={true}
+          generating={false}
+          externalText={currentPrompt || undefined}
+          onSavePreset={(text) => {
+            if (!text) return;
+            add({ text, selections: selections as any });
+          }}
+          onClearAll={() => setSelections({})}
         />
       </div>
     </div>

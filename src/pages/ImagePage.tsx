@@ -5,6 +5,7 @@ import StylePicker from "../components/shared/StylePicker";
 import { formatSchemaPrompt } from "../lib/promptFormatter";
 import SectionGrid from "../components/shared/SectionGrid";
 import { usePromptHistory } from "../components/prompt/usePromptHistory";
+import GenericPromptOutput from "../components/shared/GenericPromptOutput";
 
 export default function ImagePage() {
   const [formatId, setFormatId] = React.useState<string>(
@@ -19,7 +20,26 @@ export default function ImagePage() {
   const [values, setValues] = React.useState<Record<string, any>>({});
   const { add } = usePromptHistory("mpg_prompt_history_image_v1");
 
-  const prompt = formatSchemaPrompt("image", format, style, values, []);
+  const negatives: string[] = Array.isArray(values?.neg?.list)
+    ? (values as any).neg.list
+    : Array.isArray(values?.negatives?.list)
+    ? (values as any).negatives.list
+    : [];
+  const prompt = formatSchemaPrompt("image", format, style, values, negatives);
+  const detailed = React.useMemo(() => {
+    const lines: string[] = [];
+    Object.entries(values).forEach(([group, obj]) => {
+      if (obj && typeof obj === "object") {
+        lines.push(`${group}:`);
+        Object.entries(obj as any).forEach(([k, v]) => {
+          const text = Array.isArray(v) ? v.join(", ") : String(v ?? "");
+          if (text) lines.push(`- ${k}: ${text}`);
+        });
+        lines.push("");
+      }
+    });
+    return lines.join("\n").trim();
+  }, [values]);
   React.useEffect(() => {
     if (!prompt) return;
     const t = setTimeout(() => {
@@ -48,15 +68,15 @@ export default function ImagePage() {
         values={values}
         onChange={setValues}
       />
-      <div className="bg-neutral-950 rounded-lg border border-neutral-800 p-3">
-        <div className="text-xs font-medium text-accent-300 mb-2">Prompt</div>
-        <textarea
-          aria-label="Image prompt output"
-          readOnly
-          className="w-full rounded-md bg-neutral-950 border border-neutral-800 px-3 py-2 text-sm font-mono text-neutral-200 resize-none min-h-[96px]"
-          value={prompt}
-        />
-      </div>
+      <GenericPromptOutput
+        prompt={prompt}
+        detailed={detailed}
+        onSavePreset={(text) =>
+          add({ text, selections: { formatId, styleId, values } })
+        }
+        onClearAll={() => setValues({})}
+        title="Prompts"
+      />
     </div>
   );
 }
