@@ -125,6 +125,7 @@ function FieldEditor({
           value={Array.isArray(value) ? value : []}
           onChange={onChange}
           placeholder={field.placeholder}
+          suggestions={field.options}
         />
       </div>
     );
