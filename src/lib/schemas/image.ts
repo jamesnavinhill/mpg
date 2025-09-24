@@ -1,0 +1,269 @@
+import { GeneratorSchema } from "../types";
+
+export const imageSchema: GeneratorSchema = {
+  id: "image",
+  label: "Image",
+  formats: [
+    {
+      id: "album-art",
+      label: "Album Art (1:1)",
+      mediaType: "Album Art",
+      aspectRatio: "1:1",
+    },
+    {
+      id: "poster-3x4",
+      label: "Poster (3:4)",
+      mediaType: "Poster",
+      aspectRatio: "3:4",
+    },
+    {
+      id: "poster-2x3",
+      label: "Poster (2:3)",
+      mediaType: "Poster",
+      aspectRatio: "2:3",
+    },
+    {
+      id: "web-hero",
+      label: "Web Hero (16:9)",
+      mediaType: "Web Hero",
+      aspectRatio: "16:9",
+    },
+    {
+      id: "banner",
+      label: "Banner (3:1)",
+      mediaType: "Banner",
+      aspectRatio: "3:1",
+    },
+    {
+      id: "reel",
+      label: "Story / Reel (9:16)",
+      mediaType: "Story/Reel",
+      aspectRatio: "9:16",
+    },
+    {
+      id: "square",
+      label: "Square Post (1:1)",
+      mediaType: "Square Post",
+      aspectRatio: "1:1",
+    },
+    {
+      id: "thumb",
+      label: "Thumbnail (16:9)",
+      mediaType: "Thumbnail",
+      aspectRatio: "16:9",
+    },
+  ],
+  styles: [
+    { id: "photoreal", label: "Photorealistic" },
+    { id: "cinematic", label: "Cinematic Film Still" },
+    { id: "portrait", label: "Studio Portrait" },
+    { id: "concept", label: "Concept Art" },
+    { id: "digitalpaint", label: "Digital Painting" },
+    { id: "watercolor", label: "Watercolor" },
+    { id: "vector", label: "Vector / Flat" },
+    { id: "isometric", label: "Isometric Illustration" },
+    { id: "lineart", label: "Line Art / Ink" },
+    { id: "cyberpunk", label: "Cyberpunk / Neon" },
+    { id: "vintage", label: "Vintage / Film" },
+    { id: "surreal", label: "Surreal / Dreamlike" },
+  ],
+  sections: [
+    {
+      id: "subject",
+      label: "Subject & Focus",
+      fields: [
+        {
+          id: "subject.main",
+          label: "Main Subject",
+          type: "text",
+          placeholder: "e.g., lone astronaut, vintage car, product mug",
+        },
+        {
+          id: "subject.secondary",
+          label: "Secondary Elements",
+          type: "chips",
+          placeholder: "e.g., stars, smoke, mountains",
+        },
+        {
+          id: "subject.action",
+          label: "Action / Pose",
+          type: "text",
+          placeholder: "e.g., walking, floating, close-up",
+        },
+      ],
+    },
+    {
+      id: "composition",
+      label: "Composition",
+      fields: [
+        {
+          id: "comp.framing",
+          label: "Framing",
+          type: "select",
+          options: ["Wide", "Medium", "Close-up", "Extreme Close-up"],
+        },
+        {
+          id: "comp.rule",
+          label: "Framing Rule",
+          type: "select",
+          options: ["Rule of Thirds", "Centered", "Leading Lines", "Symmetry"],
+        },
+        {
+          id: "comp.perspective",
+          label: "Perspective",
+          type: "select",
+          options: ["Eye-level", "Low Angle", "High Angle", "Isometric"],
+        },
+        {
+          id: "comp.dof",
+          label: "Depth of Field",
+          type: "select",
+          options: ["Shallow", "Moderate", "Deep"],
+        },
+      ],
+    },
+    {
+      id: "camera",
+      label: "Camera & Optics",
+      fields: [
+        {
+          id: "camera.lens",
+          label: "Lens (feel)",
+          type: "select",
+          options: ["24mm", "35mm", "50mm", "85mm", "Macro", "Telephoto"],
+        },
+        {
+          id: "camera.aperture",
+          label: "Aperture (feel)",
+          type: "select",
+          options: ["f/1.4", "f/2.8", "f/4", "f/8", "f/16"],
+        },
+      ],
+    },
+    {
+      id: "lighting",
+      label: "Lighting",
+      fields: [
+        {
+          id: "light.type",
+          label: "Type",
+          type: "select",
+          options: [
+            "Softbox",
+            "Golden Hour",
+            "Hard Sun",
+            "Rim Light",
+            "Volumetric",
+            "Neon",
+          ],
+        },
+        {
+          id: "light.direction",
+          label: "Direction",
+          type: "select",
+          options: ["Front", "Side", "Back", "Top"],
+        },
+        {
+          id: "light.intensity",
+          label: "Intensity",
+          type: "slider",
+          min: 0,
+          max: 100,
+          step: 5,
+        },
+      ],
+    },
+    {
+      id: "color",
+      label: "Color Palette",
+      fields: [
+        {
+          id: "color.palette",
+          label: "Palette",
+          type: "text",
+          placeholder: "e.g., teal & orange, monochrome, #A5C9EA",
+        },
+        {
+          id: "color.sat",
+          label: "Saturation",
+          type: "slider",
+          min: 0,
+          max: 100,
+          step: 5,
+        },
+        {
+          id: "color.contrast",
+          label: "Contrast",
+          type: "slider",
+          min: 0,
+          max: 100,
+          step: 5,
+        },
+      ],
+    },
+    {
+      id: "materials",
+      label: "Materials & Textures",
+      fields: [
+        {
+          id: "mat.types",
+          label: "Materials",
+          type: "chips",
+          placeholder: "e.g., glass, chrome, leather, fabric",
+        },
+        {
+          id: "mat.surface",
+          label: "Surface Quality",
+          type: "select",
+          options: ["Matte", "Semi-gloss", "Glossy", "Rough", "Worn"],
+        },
+      ],
+    },
+    {
+      id: "modifiers",
+      label: "Style Modifiers",
+      fields: [
+        {
+          id: "style.modifiers",
+          label: "Modifiers",
+          type: "chips",
+          placeholder: "e.g., painterly, minimal, ornate, gritty",
+        },
+        {
+          id: "style.detail",
+          label: "Detail Level",
+          type: "slider",
+          min: 0,
+          max: 100,
+          step: 5,
+        },
+      ],
+    },
+    {
+      id: "post",
+      label: "Post-Processing",
+      fields: [
+        {
+          id: "post.fx",
+          label: "FX",
+          type: "chips",
+          placeholder: "e.g., grain, vignette, bloom, film stock",
+        },
+      ],
+    },
+    {
+      id: "negatives",
+      label: "Negative Prompts",
+      fields: [
+        {
+          id: "neg.list",
+          label: "Avoid",
+          type: "chips",
+          placeholder: "e.g., low-res, blurry, extra limbs, artifacts",
+        },
+      ],
+    },
+  ],
+};
+
+export default imageSchema;

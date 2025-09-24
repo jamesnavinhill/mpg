@@ -157,3 +157,44 @@ export function formatSelectionsAsSongPrompt(
   if (lyricsLine) lines.push(lyricsLine);
   return lines.join("\n");
 }
+
+export type GenericValues = Record<string, any>;
+
+export function formatSchemaPrompt(
+  kind: "image" | "video",
+  format: { mediaType?: string; aspectRatio?: string } | undefined,
+  style: string | undefined,
+  values: GenericValues,
+  negatives?: string[]
+): string {
+  const parts: string[] = [];
+  const lead: string[] = [];
+  if (style) lead.push(style);
+  if (format?.mediaType) lead.push(format.mediaType);
+  if (lead.length) parts.push(`${lead.join(" ")}`);
+
+  const stringify = (obj: Record<string, any>): string[] => {
+    const lines: string[] = [];
+    Object.entries(obj).forEach(([k, v]) => {
+      if (v === undefined || v === null || v === "") return;
+      if (Array.isArray(v)) {
+        if (v.length) lines.push(`${k}: ${v.join(", ")}`);
+      } else if (typeof v === "object") {
+        const inner = stringify(v);
+        if (inner.length) lines.push(`${k}: ${inner.join("; ")}`);
+      } else {
+        lines.push(`${k}: ${String(v)}`);
+      }
+    });
+    return lines;
+  };
+
+  const detailLines = stringify(values);
+  if (detailLines.length) parts.push(detailLines.join("; "));
+  const tail: string[] = [];
+  if (format?.aspectRatio) tail.push(`AR ${format.aspectRatio}`);
+  if (tail.length) parts.push(tail.join(", "));
+  if (negatives && negatives.length)
+    parts.push(`Avoid: ${negatives.join(", ")}`);
+  return parts.join(". ").trim();
+}

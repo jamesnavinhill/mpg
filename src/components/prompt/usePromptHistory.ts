@@ -11,23 +11,27 @@ type SavedPrompt = {
 
 const KEY = "mpg_prompt_history_v2";
 
-export function usePromptHistory() {
+export function usePromptHistory(storageKey?: string) {
   const [history, setHistory] = React.useState<SavedPrompt[]>([]);
+  const key = storageKey || KEY;
 
   React.useEffect(() => {
     try {
-      const raw = localStorage.getItem(KEY);
+      const raw = localStorage.getItem(key);
       const parsed = raw ? JSON.parse(raw) : [];
       setHistory(Array.isArray(parsed) ? parsed : []);
     } catch {
       setHistory([]);
     }
-  }, []);
+  }, [key]);
 
-  const saveAll = React.useCallback((list: SavedPrompt[]) => {
-    localStorage.setItem(KEY, JSON.stringify(list));
-    setHistory(list);
-  }, []);
+  const saveAll = React.useCallback(
+    (list: SavedPrompt[]) => {
+      localStorage.setItem(key, JSON.stringify(list));
+      setHistory(list);
+    },
+    [key]
+  );
 
   const add = React.useCallback(
     (entry: Omit<SavedPrompt, "id" | "createdAt">) => {

@@ -124,40 +124,47 @@
 
 ## Implementation Steps (Proposed)
 
-1) Define architecture and routing
+1) Define architecture and routing — DONE
 
-- Add `react-router-dom`, split pages: `/music`, `/image`, `/video`.
-- Shared `Layout` with nav.
+- Added `react-router-dom`, routes: `/music`, `/image`, `/video`.
+- Shared `Layout` with nav in `src/pages/Layout.tsx`.
+- `MusicPage` wraps existing `App`.
+- Placeholder `ImagePage` / `VideoPage` scaffolded.
 
-2) Design shared schema
+1) Design shared schema — DONE
 
-- Introduce `src/lib/types.ts` and schema loaders for each generator.
-- Make `promptFormatter` schema-driven.
+- Added `src/lib/types.ts` with generator schema types.
+- Seeded schemas: `src/lib/schemas/image.ts`, `src/lib/schemas/video.ts`.
+- Extended formatter with `formatSchemaPrompt(kind, format, style, values, negatives)`.
 
-3) Image generator details
+1) Image generator details
 
 - Lock styles, sections, and format options as above.
 - Add a few presets (Album Art, Web Hero, Product Shot).
 
-4) Video generator details
+1) Video generator details
 
 - Lock styles, sections, and format options as above.
 - Add presets (Short Vertical Promo, Cinematic Montage, Explainer).
 
-5) Scaffold UI components
+1) Scaffold UI components — DONE (initial)
 
-- `FormatPicker`, `StylePicker`, `SectionGrid` (refactor of `UnifiedSectionGrid` to be schema-agnostic).
-- Keep tailwind and `SimpleSelect` reused.
+- Added `components/shared/FormatPicker` and `components/shared/StylePicker` using `SimpleSelect`.
+- Next: Schema-agnostic `SectionGrid` to replace/refactor `UnifiedSectionGrid`.
 
-6) Implement ImagePage
+1) Implement ImagePage — IN PROGRESS
 
-- Bind schema to state and output; integrate history.
+- Bound format/style pickers to `imageSchema`.
+- Using `formatSchemaPrompt` to generate prompt from placeholder values.
+- Next: Build section UI using schema and persist to history.
 
-7) Implement VideoPage
+1) Implement VideoPage — IN PROGRESS
 
-- Bind schema to state and output; integrate history.
+- Bound format/style pickers to `videoSchema`.
+- Using `formatSchemaPrompt` with placeholder values.
+- Next: Add motion/format fields and loop handling; persist to history.
 
-8) Docs and examples
+1) Docs and examples
 
 - README: routes, usage, example prompts for each style/type.
 
